@@ -624,6 +624,8 @@ int main (int argc, char** argv)
 	//}
 	std::cout << "PROGRAM--DONE" << "\n";
 
+	std::cout << "TEST PRINT -- We're done here" << "\n";
+
 	return 0;
 }
 
