@@ -82,38 +82,19 @@ void System::NeighborhoodTriangulation()
 	std::list<Line*>* temp;
 
 
-//    Cell2DInteractionX* intemp;
-//    ListElementX<Cell2DInteractionX>* iit;
-//    ListElementX<Cell2DInteractionX>* nita;
-//    ListElementX<Cell2DInteractionX>* nitb;
-//    Cell2DInteractionX* inte;
-//    Cell2DCentreX* cella;
-//    Cell2DCentreX* cellb;
-//	Cell2DCentreX* cellc;
-//	Cell2DCentreX* copposite;
-//	Cell2DCentreX* ctemp;
-//	Cell2DCentreX* clead;
-//	Cell2DCentreX* ctail;
-//	Cell2DCentreX* ccheck;
-//	Cell2DTriangleX* tri_adjacent;
-//	Cell2DTriangleX* tritemp;
-//	bool found;
-//	ListElementX<Cell2DTriangleX>* tit;
-//	bool trifound;
-
-    Line* intemp;
-    Line* inte;
-	std::list<Line*>::const_iterator iit;
-	std::list<Line*>::const_iterator nita;
-	std::list<Line*>::const_iterator nitb;
-    Vertex* cella;
-    Vertex* cellb;
-    Vertex* cellc;
-    Vertex* copposite;
-    Vertex* ctemp;
-    Vertex* clead;
-    Vertex* ctail;
-    Vertex* ccheck;
+    Line* linetemp;
+    Line* line;
+	std::list<Line*>::const_iterator lit;
+	std::list<Line*>::const_iterator lita;
+	std::list<Line*>::const_iterator litb;
+    Vertex* vert_a;
+    Vertex* vert_b;
+    Vertex* vert_c;
+    Vertex* vert_opposite;
+    Vertex* vert_temp;
+    Vertex* vert_lead;
+    Vertex* vert_tail;
+    Vertex* vert_check;
 	Triangle* tri_adjacent;
 	Triangle* tritemp;
 	std::list<Triangle*>::const_iterator tit;
@@ -125,23 +106,23 @@ void System::NeighborhoodTriangulation()
 
 	std::cout <<"starting with the first triangle\n";
 
-	inte=LineList.front();
-	std::cout <<"CUT1\n";
-	cella=inte->VertexA ; cellb=inte->VertexB;
-	//nita=cella->InteractionList->GetListStart();
-	std::cout <<"CUT2\n";
+	line=LineList.front();
+//	std::cout <<"CUT1\n";
+	vert_a=line->VertexA ; vert_b=line->VertexB;
+	//lita=vert_a->InteractionList->GetListStart();
+//	std::cout <<"CUT2\n";
 	found=false;
-	std::cout <<"First triangle loop\n";
-	for (nita = cella->LineList.begin(); nita != cella->LineList.end(); ++nita)
+//	std::cout <<"First triangle loop\n";
+	for (lita = vert_a->LineList.begin(); lita != vert_a->LineList.end(); ++lita)
 	{
-		intemp=*nita;
-		ctemp=intemp->GetOtherEnd(cella);
+		linetemp=*lita;
+		vert_temp=linetemp->GetOtherEnd(vert_a);
 
-		for (nitb = cellb->LineList.begin(); nitb != cellb->LineList.end(); ++nitb)
+		for (litb = vert_b->LineList.begin(); litb != vert_b->LineList.end(); ++litb)
 		{
-			intemp=*nitb;
-			cellc=intemp->GetOtherEnd(cellb);
-			if(cellc==ctemp)
+			linetemp=*litb;
+			vert_c=linetemp->GetOtherEnd(vert_b);
+			if(vert_c==vert_temp)
 			{
 				found=true;
 				break;
@@ -149,34 +130,34 @@ void System::NeighborhoodTriangulation()
 		}
 		if(found){break;}
 	}
-	std::cout <<"out of first triangle loop \n";//"<< cella->tag <<" "<< cellb->tag <<" "<< cellc->tag <<"\n";
+//	std::cout <<"out of first triangle loop \n";//"<< vert_a->tag <<" "<< vert_b->tag <<" "<< vert_c->tag <<"\n";
 
-    Triangle* tri= new Triangle(cella,cellb,cellc);
+    Triangle* tri= new Triangle(vert_a,vert_b,vert_c);
     //tri->EdgeAB->TriangleA=tri;
     //tri->EdgeBC->TriangleA=tri;
     //tri->EdgeCA->TriangleA=tri;
 
-    intemp=tri->LineAB;
-    if(tri->GetLead(cella,cellb)==intemp->VertexA)
-    {intemp->TriangleA=tri;}
+    linetemp=tri->LineAB;
+    if(tri->GetLead(vert_a,vert_b)==linetemp->VertexA)
+    {linetemp->TriangleA=tri;}
     else
-    {intemp->TriangleB=tri;}
+    {linetemp->TriangleB=tri;}
 
-    intemp=tri->LineBC;
-    if(tri->GetLead(cellb,cellc)==intemp->VertexA)
-    {intemp->TriangleA=tri;}
+    linetemp=tri->LineBC;
+    if(tri->GetLead(vert_b,vert_c)==linetemp->VertexA)
+    {linetemp->TriangleA=tri;}
     else
-    {intemp->TriangleB=tri;}
+    {linetemp->TriangleB=tri;}
 
-    intemp=tri->LineCA;
-    if(tri->GetLead(cellc,cella)==intemp->VertexA)
-    {intemp->TriangleA=tri;}
+    linetemp=tri->LineCA;
+    if(tri->GetLead(vert_c,vert_a)==linetemp->VertexA)
+    {linetemp->TriangleA=tri;}
     else
-    {intemp->TriangleB=tri;}
+    {linetemp->TriangleB=tri;}
 
     TriangleList.push_back(tri);
 
-	std::cout <<"first triangle made and listed"<<"\n";
+//	std::cout <<"first triangle made and listed"<<"\n";
     ///////////////////////////////////////////
 
     list2->push_back(tri->LineAB);
@@ -184,7 +165,7 @@ void System::NeighborhoodTriangulation()
     list2->push_back(tri->LineCA);
 
 
-	std::cout <<"initializing list2 now entering main loop"<<"\n";
+//	std::cout <<"initializing list2 now entering main loop"<<"\n";
 
 	//this is a kind of crappy queue data structure using two switchable linked lists
     //objects processed in the first list create more objects to be processed that are stored in the second
@@ -192,55 +173,55 @@ void System::NeighborhoodTriangulation()
     //they were on the first list
     while(list2->size()!=0)
 	{
-		std::cout <<"main loop START"<<"\n";
+//		std::cout <<"main loop START"<<"\n";
 		//switching lists
 		list1->clear();
 		temp=list1;
 		list1=list2;
 		list2=temp;
-		std::cout <<"lists switched"<<"\n";
+//		std::cout <<"lists switched"<<"\n";
 		//processing items on list1
-		std::cout <<"entering list loop"<<"\n";
-		for(iit=list1->begin(); iit != list1->end() ; ++iit)
+//		std::cout <<"entering list loop"<<"\n";
+		for(lit=list1->begin(); lit != list1->end() ; ++lit)
 		{
-			std::cout <<"starting list loop"<<"\n";
+//			std::cout <<"starting list loop"<<"\n";
 			//we go edge by edge constructing new triangles if possible
 			found=false;
-			inte=*iit;
-			std::cout <<"get interaction"<<"\n";
-			cella=inte->VertexA;
-			cellb=inte->VertexB;
-			std::cout <<"get cells"<<"\n";
-			tri_adjacent=inte->TriangleA;
-			if(tri_adjacent==0){tri_adjacent=inte->TriangleB;}
-			std::cout <<"get adjecent"<<"\n";
-			clead=tri_adjacent->GetLead(cella,cellb);
-			if(clead==cella){ctail=cellb;}else{ctail=cella;}
-			std::cout <<"got lead"<<"\n";
-			copposite=tri_adjacent->GetOppositeVertex(inte);
+			line=*lit;
+//			std::cout <<"get lines"<<"\n";
+			vert_a=line->VertexA;
+			vert_b=line->VertexB;
+//			std::cout <<"get vertices"<<"\n";
+			tri_adjacent=line->TriangleA;
+			if(tri_adjacent==0){tri_adjacent=line->TriangleB;}
+//			std::cout <<"get adjecent"<<"\n";
+			vert_lead=tri_adjacent->GetLead(vert_a,vert_b);
+			if(vert_lead==vert_a){vert_tail=vert_b;}else{vert_tail=vert_a;}
+//			std::cout <<"got lead"<<"\n";
+			vert_opposite=tri_adjacent->GetOppositeVertex(line);
 
-			//std::cout <<"building triangle from edge "<< cella->tag <<" "<< cellb->tag <<" into loop a"<<"\n";
+			//std::cout <<"building triangle from edge "<< vert_a->tag <<" "<< vert_b->tag <<" into loop a"<<"\n";
 
-			for(nita=cella->LineList.begin(); nita != cella->LineList.end() ; ++nita)
+			for(lita=vert_a->LineList.begin(); lita != vert_a->LineList.end() ; ++lita)
 			{
-				intemp=*nita;
-				ctemp=intemp->GetOtherEnd(cella);
-				//std::cout <<"checking from cella: cell "<<ctemp->tag<<"\n";
-				if(ctemp==copposite || ctemp==cellb){continue;}
+				linetemp=*lita;
+				vert_temp=linetemp->GetOtherEnd(vert_a);
+				//std::cout <<"checking from vert_a: cell "<<vert_temp->tag<<"\n";
+				if(vert_temp==vert_opposite || vert_temp==vert_b){continue;}
 
-				for(nitb=cellb->LineList.begin(); nitb != cellb->LineList.end() ; ++nitb)
+				for(litb=vert_b->LineList.begin(); litb != vert_b->LineList.end() ; ++litb)
 				{
-					intemp=*nitb;
-					cellc=intemp->GetOtherEnd(cellb);
-					//std::cout <<"checking from cella: cell "<<ctemp->tag<<" checking from cellb: cell "<<cellc->tag<<"\n";
-					if(cellc==copposite || cellc==cella){continue;}
-					if(ctemp==cellc)
+					linetemp=*litb;
+					vert_c=linetemp->GetOtherEnd(vert_b);
+					//std::cout <<"checking from vert_a: cell "<<vert_temp->tag<<" checking from vert_b: cell "<<vert_c->tag<<"\n";
+					if(vert_c==vert_opposite || vert_c==vert_a){continue;}
+					if(vert_temp==vert_c)
 					{
 						//we found a common neighbor
 						found=true;
 
 						//check if the triangle already exists
-						std::cout <<"we found a match, now check whether the triangle already exists"<<"\n";
+//						std::cout <<"we found a match, now check whether the triangle already exists"<<"\n";
 
 						trifound=false;
 						for(tit=TriangleList.begin() ; tit != TriangleList.end() ; ++tit)
@@ -249,12 +230,12 @@ void System::NeighborhoodTriangulation()
 
 							//std::cout <<"checking triangle "<<tritemp->CellA->tag<<" "<<tritemp->CellB->tag<<" "<<tritemp->CellC->tag<<" "<<"\n";
 
-							ccheck=tritemp->GetNextVertex(clead);
+							vert_check=tritemp->GetNextVertex(vert_lead);
 
-							//if(ccheck!=0){std::cout <<"entering clead "<<clead->tag<<" expecting ctail "<<ctail->tag<<" got "<<ccheck->tag<<"\n";}
-							//else{std::cout <<"got nothing, clead doesn't belong to the triangle"<<"\n";}
+							//if(vert_check!=0){std::cout <<"entering vert_lead "<<vert_lead->tag<<" expecting vert_tail "<<vert_tail->tag<<" got "<<vert_check->tag<<"\n";}
+							//else{std::cout <<"got nothing, vert_lead doesn't belong to the triangle"<<"\n";}
 
-							if(ccheck==ctail)
+							if(vert_check==vert_tail)
 							{
 								//the triangle already exist, don't create the triangle
 								trifound=true;
@@ -262,38 +243,38 @@ void System::NeighborhoodTriangulation()
 							}
 
 						}
-						std::cout <<"out of the triangle search loop"<<"\n";
+//						std::cout <<"out of the triangle search loop"<<"\n";
 
 						if(!(trifound))
 						{
-							std::cout <<"it is a new triangle, creating \n";
+//							std::cout <<"it is a new triangle, creating \n";
 
 
 
-						    tri= new Triangle(clead,ctail,cellc);
+						    tri= new Triangle(vert_lead,vert_tail,vert_c);
 
-						    intemp=tri->LineAB;
-						    if(tri->GetLead(clead,ctail)==intemp->VertexA)
-						    {intemp->TriangleA=tri;}
+						    linetemp=tri->LineAB;
+						    if(tri->GetLead(vert_lead,vert_tail)==linetemp->VertexA)
+						    {linetemp->TriangleA=tri;}
 						    else
-						    {intemp->TriangleB=tri;}
-						    intemp=tri->LineBC;
-						    if(tri->GetLead(ctail,cellc)==intemp->VertexA)
-						    {intemp->TriangleA=tri;}
+						    {linetemp->TriangleB=tri;}
+						    linetemp=tri->LineBC;
+						    if(tri->GetLead(vert_tail,vert_c)==linetemp->VertexA)
+						    {linetemp->TriangleA=tri;}
 						    else
-						    {intemp->TriangleB=tri;}
-						    intemp=tri->LineCA;
-						    if(tri->GetLead(cellc,clead)==intemp->VertexA)
-						    {intemp->TriangleA=tri;}
+						    {linetemp->TriangleB=tri;}
+						    linetemp=tri->LineCA;
+						    if(tri->GetLead(vert_c,vert_lead)==linetemp->VertexA)
+						    {linetemp->TriangleA=tri;}
 						    else
-						    {intemp->TriangleB=tri;}
+						    {linetemp->TriangleB=tri;}
 
 						    TriangleList.push_back(tri);
 
 						    list2->push_back(tri->LineBC);
 						    list2->push_back(tri->LineCA);
 
-						    std::cout <<"triangle created and listed"<<"\n";
+//						    std::cout <<"triangle created and listed"<<"\n";
 
 						}
 						break;
