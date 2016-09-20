@@ -317,15 +317,15 @@ void System::UpdateSystemDimensions()
 	Vertex* vertex;
 	for(vit = VertexList.begin() ; vit !=VertexList.end() ; ++vit)
 	{
-		std::cout << "prehola \n";
+//		std::cout << "prehola \n";
 		vertex=*vit;
 		//std::cout << "Cell tag "<< it->tag << " cell x "<< it->x << " cell y "<< it->y << "\n";
-		std::cout << "hola \n";
+//		std::cout << "hola \n";
 		if(vertex->x < x_min){ x_min=vertex->x;}
 		if(vertex->x > x_max){ x_max=vertex->x;}
 		if(vertex->y < y_min){ y_min=vertex->y;}
 		if(vertex->y > y_max){ y_max=vertex->y;}
-		std::cout << "posthola \n";
+//		std::cout << "posthola \n";
 
 	}
 	x_min=x_min-0.5f*std_cell_radius;

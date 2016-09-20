@@ -31,10 +31,10 @@
 ///////////////////////////////////////////////////////////////////
 void paint(cairo_surface_t *cs, System* my_system)
 {
-	std::cout << "paint--START" << "\n";
+//	std::cout << "paint--START" << "\n";
 	cairo_t *c;
 
-	std::cout << "paint--1" << "\n";
+//	std::cout << "paint--1" << "\n";
 
 	c=cairo_create(cs);
 
@@ -70,7 +70,7 @@ void paint(cairo_surface_t *cs, System* my_system)
 		canvas_y=SIZEX*ratio;
 	}
 
-	std::cout << "paint--2" << "\n";
+//	std::cout << "paint--2" << "\n";
 
 	//std::cout << "syst dimensions "<< syst_max_x<<" " <<syst_min_x<<" "<< syst_max_y<<" " <<syst_min_y << "\n";
 	//std::cout << "length "<< length_x<<" " <<length_y<< "\n";
@@ -83,7 +83,7 @@ void paint(cairo_surface_t *cs, System* my_system)
     int draw_x,draw_y;//,cell_radius;
 	cairo_set_line_width(c, 2.5);
 
-	std::cout << "paint--3" << "\n";
+//	std::cout << "paint--3" << "\n";
 
 	if(draw_origin)
 	{
@@ -124,7 +124,7 @@ void paint(cairo_surface_t *cs, System* my_system)
 	}
 
 
-	std::cout << "paint--4" << "\n";
+//	std::cout << "paint--4" << "\n";
 
 	if(draw_vertices)
 	{
@@ -132,16 +132,16 @@ void paint(cairo_surface_t *cs, System* my_system)
 		//Cell2DCentreX* cell;
 		std::list<Vertex*>::const_iterator vit;
 		Vertex* vertex;
-		std::cout << "paint--4.1 "<< my_system->VertexList.size() << "\n";
+//		std::cout << "paint--4.1 "<< my_system->VertexList.size() << "\n";
 		for(vit=my_system->VertexList.begin() ; vit!=my_system->VertexList.end() ; ++vit)
 		{
-			std::cout << "paint--4.1.1" << "\n";
+//			std::cout << "paint--4.1.1" << "\n";
 			vertex=*vit;
 			//vertex=my_system->iterVertexGet();
-			std::cout << "paint--4.2" << "\n";
+//			std::cout << "paint--4.2" << "\n";
 			draw_x=canvas_x*(vertex->x - syst_min_x)/length_x ;
 			draw_y=canvas_y-canvas_y*(vertex->y - syst_min_y)/length_y ;
-			std::cout << "paint--4.3" << "\n";
+//			std::cout << "paint--4.3" << "\n";
 			//cell_radius=canvas_x*(0.5f*my_system->std_cell_radius)/length_x;
 			//cell_radius=canvas_x*(0.5f*cell->EqSurf)/length_x;
 			//cell_radius=canvas_x*(0.5f*cell->CellSurf)/length_x;
@@ -158,20 +158,20 @@ void paint(cairo_surface_t *cs, System* my_system)
 			cairo_translate(c, draw_x, draw_y);
 			cairo_arc(c, 0, 0, vertex_radius, 0, 2 * M_PI);
 			cairo_stroke(c);
-			std::cout << "paint--4.4" << "\n";
+//			std::cout << "paint--4.4" << "\n";
 			//cairo_stroke_preserve(c);
 
 			//cairo_set_source_rgb(c, 0.3, 0.4, 0.6);
 			//cairo_fill(c);
 			cairo_translate(c, -draw_x, -draw_y);
 
-			std::cout << "paint--4.5" << "\n";
+//			std::cout << "paint--4.5" << "\n";
 			//cit=my_system->CellCentreList->IteratorNext();
 			//cit=cit->next;
 		}
 	}
 
-	std::cout << "paint--5 "<<my_system->LineList.size() << "\n";
+//	std::cout << "paint--5 "<<my_system->LineList.size() << "\n";
 
 	//draw the lines
 	cairo_set_line_width(c, line_thickness);
@@ -182,9 +182,9 @@ void paint(cairo_surface_t *cs, System* my_system)
 		Line* line;
 		for(lit=my_system->LineList.begin() ; lit!=my_system->LineList.end() ; ++lit)
 		{
-			std::cout << "paint--5.1" << "\n";
+//			std::cout << "paint--5.1" << "\n";
 			line=*lit;
-			std::cout << "paint--5.2" << "\n";
+//			std::cout << "paint--5.2" << "\n";
 			draw_x=canvas_x*(line->VertexA->x - syst_min_x)/length_x ;
 			draw_y=canvas_y-canvas_y*(line->VertexA->y - syst_min_y)/length_y ;
 
@@ -214,7 +214,7 @@ void paint(cairo_surface_t *cs, System* my_system)
 		}
 	}
 
-	std::cout << "paint--6" << "\n";
+//	std::cout << "paint--6" << "\n";
 
 	if(draw_triangles)
 	{
@@ -224,18 +224,18 @@ void paint(cairo_surface_t *cs, System* my_system)
 		Triangle* tri;
 		float xa,ya,xb,yb,xc,yc,x,y;
 
-		std::cout << "paint--6.1 "<< my_system->TriangleList.size() << "\n";
+//		std::cout << "paint--6.1 "<< my_system->TriangleList.size() << "\n";
 
 		for(tit=my_system->TriangleList.begin() ; tit!=my_system->TriangleList.end() ; ++tit)
 		{
-			std::cout << "paint--6.2" << "\n";
+//			std::cout << "paint--6.2" << "\n";
 			tri=*tit;
-			std::cout << "paint--6.3" << "\n";
+//			std::cout << "paint--6.3" << "\n";
 			//A
 			xa=tri->VertexA->x + 0.5f*(tri->CentroidX - tri->VertexA->x);
 			ya=tri->VertexA->y + 0.5f*(tri->CentroidY - tri->VertexA->y);
 
-			std::cout << "paint--6.4" << "\n";
+//			std::cout << "paint--6.4" << "\n";
 			draw_x=0.1f+canvas_x*(xa - syst_min_x)/length_x ;
 			draw_y=0.1f+canvas_y-canvas_y*(ya - syst_min_y)/length_y ;
 
@@ -313,7 +313,7 @@ void paint(cairo_surface_t *cs, System* my_system)
 		}
 	}
 
-	std::cout << "paint--END" << "\n";
+//	std::cout << "paint--END" << "\n";
 
 }
 ///////////////////////////////////////////////////////////////////
@@ -328,14 +328,14 @@ void showxlib(System* my_system)
 	int scr;
 	cairo_surface_t *cs;
 
-	std::cout << "showxlib--START" << "\n";
+//	std::cout << "showxlib--START" << "\n";
 
 	if(!(dpy=XOpenDisplay(NULL))) {
 		fprintf(stderr, "ERROR: Could not open display\n");
 		return ;
 	}
 
-	std::cout << "showxlib--1" << "\n";
+//	std::cout << "showxlib--1" << "\n";
 
 	scr=DefaultScreen(dpy);
 	rootwin=RootWindow(dpy, scr);
@@ -349,22 +349,22 @@ void showxlib(System* my_system)
 	//float length_y=syst_max_y-syst_min_y;
 	//float ratio=length_y/length_x;
 
-	std::cout << "showxlib--2" << "\n";
+//	std::cout << "showxlib--2" << "\n";
 
 	win=XCreateSimpleWindow(dpy, rootwin, 1, 1, SIZEX, SIZEY, 0,
 			BlackPixel(dpy, scr), BlackPixel(dpy, scr));
 
-	std::cout << "showxlib--3" << "\n";
+//	std::cout << "showxlib--3" << "\n";
 
 	XStoreName(dpy, win, "VerteX");
 	XSelectInput(dpy, win, ExposureMask|ButtonPressMask);
 	XMapWindow(dpy, win);
 
-	std::cout << "showxlib--4" << "\n";
+//	std::cout << "showxlib--4" << "\n";
 
 	cs=cairo_xlib_surface_create(dpy, win, DefaultVisual(dpy, 0), SIZEX, SIZEY);
 
-	std::cout << "showxlib--5" << "\n";
+//	std::cout << "showxlib--5" << "\n";
 
 	while(1) {
 		XNextEvent(dpy, &e);
@@ -373,12 +373,12 @@ void showxlib(System* my_system)
 		} else if(e.type==ButtonPress) break;
 	}
 
-	std::cout << "showxlib--6" << "\n";
+//	std::cout << "showxlib--6" << "\n";
 
 	cairo_surface_destroy(cs);
 	XCloseDisplay(dpy);
 
-	std::cout << "showxlib--END" << "\n";
+//	std::cout << "showxlib--END" << "\n";
 }
 ///////////////////////////////////////////////////////////////////
 
@@ -623,8 +623,6 @@ int main (int argc, char** argv)
 		showxlib(MySystem);
 	//}
 	std::cout << "PROGRAM--DONE" << "\n";
-
-	std::cout << "TEST PRINT -- We're done here" << "\n";
 
 	return 0;
 }
