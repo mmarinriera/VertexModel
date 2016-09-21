@@ -8,7 +8,8 @@
 #ifndef CENTRE_H_
 #define CENTRE_H_
 
-#include "Cell.h"
+#include "Vertex.h"
+//#include "Cell.h"
 
 class Cell;
 
@@ -16,10 +17,10 @@ class Centre : public Vertex
 {
 public:
 	Centre();
-	Centre(float, float);
+	Centre(float, float, Cell*);
 	virtual ~Centre();
 
-	//Cell* cell;
+	Cell* cell;
 };
 
 #endif /* CENTRE_H_ */

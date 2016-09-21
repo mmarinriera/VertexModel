@@ -430,7 +430,7 @@ void System::InitialConditionsSingleCell()
 	VertexList.push_back(jd);
 	new_cell->JunctionList.push_back(jd);
 	//Creating the cell Centre
-	Centre* ca= new Centre(0.0f,0.0f);
+	Centre* ca= new Centre(0.0f,0.0f,new_cell);
 	VertexList.push_back(ca);
 	new_cell->CellCentre=ca;
 

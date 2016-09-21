@@ -24,6 +24,8 @@
 //class Edge;
 //class Fiber;
 
+class Cell;
+
 class Triangle {
 public:
 	//the vertices of the triangle are ordered in clock-wise sense (A-B-C-A)
@@ -34,7 +36,7 @@ public:
 	Line* LineBC;
 	Line* LineCA;
 
-	//Cell* cell;
+	Cell* cell;
 
 	float CentroidX,CentroidY;
 	float SurfaceArea; //,SurfacePartialA,SurfacePartialB,SurfacePartialC; We don't need surface partials, I think

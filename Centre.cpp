@@ -11,14 +11,14 @@
 Centre::Centre() : Vertex()
 {
 	IsCentre=true;
-	//cell=0;
+	cell=0;
 }
 
 
-Centre::Centre(float a, float b) : Vertex(a,b)
+Centre::Centre(float a, float b, Cell* c) : Vertex(a,b)
 {
 	IsCentre=true;
-	//cell=c;
+	cell=c;
 }
 
 Centre::~Centre() {

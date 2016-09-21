@@ -9,17 +9,20 @@
 #define CELL_H_
 
 #include <list>
-#include "Vertex.h"
-#include "Junction.h"
+
 #include "Centre.h"
-#include "Line.h"
+#include "Junction.h"
 #include "Edge.h"
+#include "Line.h"
 #include "Fiber.h"
 #include "Triangle.h"
 
+//#include "Edge.h"
+//#include "Vertex.h"
+
 //class Vertex;
 //class Junction;
-class Centre;
+//class Centre;
 //class Line;
 //class Edge;
 //class Fiber;

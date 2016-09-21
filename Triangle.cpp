@@ -28,7 +28,7 @@ Triangle::Triangle()
 	CentroidY=0.0f;
 	SurfaceArea=0.0f;
 
-	//Cell=0;
+	cell=0;
 }
 
 Triangle::Triangle(Vertex* va, Vertex* vb, Vertex* vc)
@@ -69,7 +69,7 @@ Triangle::Triangle(Vertex* va, Vertex* vb, Vertex* vc)
 	UpdateCentroid();
 	UpdateSurfaceArea();
 
-	//Cell=0;
+	cell=0;
 }
 
 Triangle::Triangle(Vertex* va, Line* lab, Line* lbc, Line* lca)
@@ -102,7 +102,7 @@ Triangle::Triangle(Vertex* va, Vertex* vb, Vertex* vc, Line* lab, Line* lbc, Lin
 	UpdateCentroid();
 	UpdateSurfaceArea();
 
-	//Cell=0;
+	cell=0;
 
 }
 

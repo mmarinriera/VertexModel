@@ -10,14 +10,15 @@
 
 #include <list>
 #include <iostream>
-#include "Vertex.h"
-#include "Junction.h"
-#include "Centre.h"
-#include "Line.h"
-#include "Edge.h"
-#include "Fiber.h"
-#include "Triangle.h"
+
 #include "Cell.h"
+#include "Vertex.h"
+//#include "Junction.h"
+//#include "Centre.h"
+#include "Line.h"
+//#include "Edge.h"
+//#include "Fiber.h"
+#include "Triangle.h"
 
 class System {
 public:

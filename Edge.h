@@ -16,7 +16,7 @@
 #include "Line.h"
 
 //class Vertex;
-class Line;
+//class Line;
 //class Triangle;
 
 class Edge : public Line {
