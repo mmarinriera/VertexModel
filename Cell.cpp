@@ -12,9 +12,11 @@ Cell::Cell() {
 	id=0;
 	CellCentre=0;
 
-	CellSurfArea=0.0f;
-	CellEqSurf=0.0f;
-	CellContractilityCoef=0.0f;
+	SurfAreaConservationCoef=0.0f;
+	SurfArea=0.0f;
+	EqSurfArea=0.0f;
+	PerimeterTensionCoef=0.0f;
+	Perimeter=0.0f;
 
 }
 
@@ -23,9 +25,11 @@ Cell::Cell(Centre* c, int b) {
 	id=0;
 	CellCentre=c;
 
-	CellSurfArea=0.0f;
-	CellEqSurf=0.0f;
-	CellContractilityCoef=0.0f;
+	SurfAreaConservationCoef=0.0f;
+	SurfArea=0.0f;
+	EqSurfArea=0.0f;
+	PerimeterTensionCoef=0.0f;
+	Perimeter=0.0f;
 
 }
 

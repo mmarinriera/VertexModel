@@ -40,9 +40,13 @@ public:
 
 	int id;
 
-	float CellSurfArea; //actual cell surface
-	float CellEqSurf;   //equilibrium surface
-	float CellContractilityCoef;
+	//Mechanical parameters
+	float SurfAreaConservationCoef;
+	float SurfArea; //actual cell surface
+	float EqSurfArea;   //equilibrium surface
+	float PerimeterTensionCoef;
+	float Perimeter;
+
 
 //	bool IsBorder; //tells if the cell is located at the border of the system
 //	bool IsFixed; //tells if the cell is fixed in space

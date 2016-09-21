@@ -9,8 +9,6 @@
 #include <cmath>
 #include <iostream>
 
-//TODO When we pass vertices to the constructor, we need to make sure the vertices know they are being connected (set up the proper variables in the vertex object
-//TODO also in the daughter classes, if need be
 
 Line::Line() {
 	VertexA=0;
@@ -18,7 +16,12 @@ Line::Line() {
 	TriangleA=0;
 	TriangleB=0;
 
-	Length=UpdateLength();
+	Length=0.0f;
+
+	LineTensionCoef=0.0f;
+
+	IsEdge=false;
+	IsFiber=false;
 
 
 }
@@ -31,7 +34,12 @@ Line::Line(Vertex* va, Vertex* vb) {
 	TriangleA=0;
 	TriangleB=0;
 
-	Length=UpdateLength();
+	UpdateLength();
+
+	LineTensionCoef=0.0f;
+
+	IsEdge=false;
+	IsFiber=false;
 
 }
 
@@ -43,7 +51,12 @@ Line::Line(Vertex* va, Vertex* vb, Triangle* ta, Triangle* tb) {
 	TriangleA=ta;
 	TriangleB=tb;
 
-	Length=UpdateLength();
+	UpdateLength();
+
+	LineTensionCoef=0.0f;
+
+	IsEdge=false;
+	IsFiber=false;
 
 }
 
@@ -51,9 +64,9 @@ Line::~Line() {
 	// TODO Auto-generated destructor stub
 }
 
-float Line::UpdateLength()
+void Line::UpdateLength()
 {
-	return sqrt(pow(VertexA->x - VertexB->x,2)+pow(VertexA->y - VertexB->y,2));
+	Length=sqrt(pow(VertexA->x - VertexB->x,2)+pow(VertexA->y - VertexB->y,2));
 }
 
 Vertex* Line::GetOtherEnd(Vertex* OneEnd)

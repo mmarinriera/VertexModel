@@ -23,6 +23,12 @@ public:
 	float x;
 	float y;
 
+	//logical variables (to determine derived class type)
+	bool IsJunction;
+	bool IsCentre;
+
+	bool IsFixed; //This will fix the vertex in space so it doesn't move (e.g. in the borders of the system
+
 	std::list<Triangle*> TriangleList;
 	std::list<Line*> LineList;
 

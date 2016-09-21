@@ -13,6 +13,7 @@
 //#include "Centre.h"
 
 #include "Line.h"
+//#include "Cell.h"
 //#include "Edge.h"
 //#include "Fiber.h"
 
@@ -32,6 +33,9 @@ public:
 	Line* LineAB;
 	Line* LineBC;
 	Line* LineCA;
+
+	//Cell* cell;
+
 	float CentroidX,CentroidY;
 	float SurfaceArea; //,SurfacePartialA,SurfacePartialB,SurfacePartialC; We don't need surface partials, I think
 

@@ -249,8 +249,6 @@ void System::NeighborhoodTriangulation()
 						{
 //							std::cout <<"it is a new triangle, creating \n";
 
-
-
 						    tri= new Triangle(vert_lead,vert_tail,vert_c);
 
 						    linetemp=tri->LineAB;
@@ -275,6 +273,14 @@ void System::NeighborhoodTriangulation()
 						    list2->push_back(tri->LineCA);
 
 //						    std::cout <<"triangle created and listed"<<"\n";
+
+						    //We have to determine to which cell the triangle belongs,
+						    //that info is stored in the centre vertex, so we have to find it
+
+//						    if(tri->VertexA->IsCentre)
+//						    {
+//						    	tri->Cell=tri->VertexA->Cell;
+//						    }
 
 						}
 						break;
@@ -343,7 +349,14 @@ void System::UpdateSystemDimensions()
 ///////////////////////////////////////////////////////////////////
 void System::MechSolver()
 {
+	//This function solves the system of equations of motion for the Vertices in this Vertex Model
 
+	std::list<Triangle*>::const_iterator tit;
+
+	for(tit=TriangleList.begin(); tit!=TriangleList.end(); ++tit)
+	{
+
+	}
 }
 ///////////////////////////////////////////////////////////////////
 

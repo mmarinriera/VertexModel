@@ -11,11 +11,21 @@ Vertex::Vertex() {
 	x=0;
 	y=0;
 
+	IsJunction=false;
+	IsCentre=false;
+
+	IsFixed=false;
+
 }
 
 Vertex::Vertex(float a,float b) {
 	x=a;
 	y=b;
+
+	IsJunction=false;
+	IsCentre=false;
+
+	IsFixed=false;
 
 }
 

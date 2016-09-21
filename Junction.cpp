@@ -7,20 +7,16 @@
 
 #include "Junction.h"
 
-Junction::Junction() : Vertex() {
-
-	//x=a;
-	//y=b;
-
+Junction::Junction() : Vertex()
+{
+	IsJunction=true;
 }
 
 
 
-Junction::Junction(float a, float b) : Vertex(a,b) {
-
-	//x=a;
-	//y=b;
-
+Junction::Junction(float a, float b) : Vertex(a,b)
+{
+	IsJunction=true;
 }
 
 Junction::~Junction() {

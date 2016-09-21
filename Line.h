@@ -27,7 +27,14 @@ public:
 
 	float Length;
 
-	float UpdateLength();
+	//mechanical parameters
+	float LineTensionCoef;
+
+	//logical variables (to determine derived class type)
+	bool IsEdge;
+	bool IsFiber;
+
+	void UpdateLength();
 	Vertex* GetOtherEnd(Vertex*);
 	Triangle* GetOtherSide(Triangle*);
 	void ConnectVertex(Vertex*,char);

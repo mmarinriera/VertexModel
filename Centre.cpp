@@ -8,22 +8,18 @@
 #include "Centre.h"
 //#include "Cell.h"
 
-Centre::Centre() : Vertex() {}
+Centre::Centre() : Vertex()
+{
+	IsCentre=true;
+	//cell=0;
+}
 
-	//x=a;
-	//y=b;
+
+Centre::Centre(float a, float b) : Vertex(a,b)
+{
+	IsCentre=true;
 	//cell=c;
-
-//}
-
-
-Centre::Centre(float a, float b) : Vertex(a,b) {}
-
-	//x=a;
-	//y=b;
-	//cell=c;
-
-//}
+}
 
 Centre::~Centre() {
 	// TODO Auto-generated destructor stub
