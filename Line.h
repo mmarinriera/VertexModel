@@ -34,6 +34,8 @@ public:
 	bool IsEdge;
 	bool IsFiber;
 
+	int id;
+
 	void UpdateLength();
 	Vertex* GetOtherEnd(Vertex*);
 	Triangle* GetOtherSide(Triangle*);

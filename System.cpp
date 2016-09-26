@@ -267,6 +267,7 @@ void System::NeighborhoodTriangulation()
 						    else
 						    {linetemp->TriangleB=tri;}
 
+						    tri->id=TriangleList.size()+1;
 						    TriangleList.push_back(tri);
 
 						    list2->push_back(tri->LineBC);
@@ -277,10 +278,35 @@ void System::NeighborhoodTriangulation()
 						    //We have to determine to which cell the triangle belongs,
 						    //that info is stored in the centre vertex, so we have to find it
 
-//						    if(tri->VertexA->IsCentre)
-//						    {
-//						    	tri->Cell=tri->VertexA->Cell;
-//						    }
+						    Centre* centre;
+						    if(!(tri->VertexA->IsCentre))
+						    {
+						    	if(!(tri->VertexB->IsCentre))
+						    	{
+						    		if(!(tri->VertexC->IsCentre))
+						    		{
+						    			std::cout <<"System::NeighborhoodTriangulation()---Triangle doesn't connect to a Centre!"<<"\n";
+//						    			std::cout <<"System::NeighborhoodTriangulation()---tri "<< tri->id<<" va "<<tri->VertexA->id<< " vb "<< tri->VertexB->id<<" vc "<< tri->VertexC->id<<"\n";
+//						    			std::cout <<"System::NeighborhoodTriangulation()---tri "<< tri->id<<" va "<< tri->VertexA->x<<" "<< tri->VertexA->y<< " vb "<< tri->VertexB->x<<" "<< tri->VertexB->y<<" "<<" vc "<< tri->VertexC->x<<" "<< tri->VertexC->y<<"\n";
+//						    			std::cout <<"System::NeighborhoodTriangulation()---tri "<< tri->id<<" va "<<tri->VertexA->IsCentre<< " vb "<< tri->VertexB->IsCentre<<" vc "<< tri->VertexC->IsCentre<<"\n";
+						    		}
+						    		else
+						    		{
+							    		centre= static_cast<Centre*>(tri->VertexB);
+								    	tri->cell=centre->cell;
+						    		}
+						    	}
+						    	else
+						    	{
+						    		centre= static_cast<Centre*>(tri->VertexC);
+							    	tri->cell=centre->cell;
+						    	}
+						    }
+						    else
+						    {
+						    	centre= static_cast<Centre*>(tri->VertexA);
+						    	tri->cell=centre->cell;
+						    }
 
 						}
 						break;
@@ -399,67 +425,124 @@ void System::InitialConditionsSingleCell()
 
 	//float vertex_distance=std_cell_radius;
 
-	Cell* new_cell=new Cell;
+	Cell cell_template;
+
+	//we create an object template, initialize all the variables,
+	//and then we copy it to all the objects that we create for the system (we use the implicit copy constructor)
+	//ATENTION: we might need to write an explicit copy constructor if we want to copy objects with already filled
+	//lists inside (expect that when we implement vertex rearrangement)
+
+	cell_template.EqSurfArea=5.0f;
+	cell_template.SurfAreaConservationCoef=1.0f;
+	cell_template.PerimeterTensionCoef=1.0f;
+	cell_template.id = CellList.size()+1;
+
+
+
+	Cell* new_cell=new Cell(cell_template);
 
 	CellList.push_back(new_cell);
 
-	//float disty=sqrt(pow(vertex_distance,2)-pow(0.5f*vertex_distance,2));
 
-	//float cell_cortical_tension=1.0f;
-	//float cell_turgency=1.0f;
-
-
-	//System->std_cell_radius=1.0f;
-
-	//int lx=3;
-	//int ly=3;
+	int id;
 
 	std::cout<<"InitialConditionsSingleCell--BLUILD THE MESH\n";
 
 	//Creating the cell junctions
 	Junction* ja=new Junction(-0.5f,-0.5f);
+	ja->CellList.push_back(new_cell);
 	VertexList.push_back(ja);
+	id=VertexList.size();
+	ja->id=id;
 	new_cell->JunctionList.push_back(ja);
+
 	Junction* jb=new Junction(-0.5f,0.5f);
+	jb->CellList.push_back(new_cell);
 	VertexList.push_back(jb);
+	id=VertexList.size();
+	jb->id=id;
 	new_cell->JunctionList.push_back(jb);
+
 	Junction* jc=new Junction(0.5f,0.5f);
+	jc->CellList.push_back(new_cell);
 	VertexList.push_back(jc);
+	id=VertexList.size();
+	jc->id=id;
 	new_cell->JunctionList.push_back(jc);
+
 	Junction* jd=new Junction(0.5f,-0.5f);
+	jd->CellList.push_back(new_cell);
 	VertexList.push_back(jd);
+	id=VertexList.size();
+	jc->id=id;
 	new_cell->JunctionList.push_back(jd);
+
 	//Creating the cell Centre
 	Centre* ca= new Centre(0.0f,0.0f,new_cell);
 	VertexList.push_back(ca);
+	id=VertexList.size();
+	ca->id=id;
 	new_cell->CellCentre=ca;
 
 	//Now we connect with lines
 	//Edges
+	float edge_line_tension=1.0f;
 	Edge* new_edge= new Edge(ja,jb);
+	new_edge->LineTensionCoef=edge_line_tension;
 	new_cell->EdgeList.push_back(new_edge);
+	id=LineList.size();
+	new_edge->id=id;
 	LineList.push_back(new_edge);
+
 	new_edge= new Edge(jb,jc);
+	new_edge->LineTensionCoef=edge_line_tension;
 	new_cell->EdgeList.push_back(new_edge);
+	id=LineList.size();
+	new_edge->id=id;
 	LineList.push_back(new_edge);
+
 	new_edge= new Edge(jc,jd);
+	new_edge->LineTensionCoef=edge_line_tension;
 	new_cell->EdgeList.push_back(new_edge);
+	id=LineList.size();
+	new_edge->id=id;
 	LineList.push_back(new_edge);
+
 	new_edge= new Edge(jd,ja);
+	new_edge->LineTensionCoef=edge_line_tension;
 	new_cell->EdgeList.push_back(new_edge);
+	id=LineList.size();
+	new_edge->id=id;
 	LineList.push_back(new_edge);
+
 	//Fibers
+	float fiber_line_tension=1.0f;
 	Fiber* new_fiber= new Fiber(ja,ca);
+	new_fiber->LineTensionCoef=fiber_line_tension;
 	new_cell->FiberList.push_back(new_fiber);
+	id=LineList.size();
+	new_fiber->id=id;
 	LineList.push_back(new_fiber);
+
 	new_fiber= new Fiber(jb,ca);
+	new_fiber->LineTensionCoef=fiber_line_tension;
 	new_cell->FiberList.push_back(new_fiber);
+	id=LineList.size();
+	new_fiber->id=id;
 	LineList.push_back(new_fiber);
+
 	new_fiber= new Fiber(jc,ca);
+	new_fiber->LineTensionCoef=fiber_line_tension;
 	new_cell->FiberList.push_back(new_fiber);
+	id=LineList.size();
+	new_fiber->id=id;
 	LineList.push_back(new_fiber);
+
 	new_fiber= new Fiber(jd,ca);
+	new_fiber->LineTensionCoef=fiber_line_tension;
 	new_cell->FiberList.push_back(new_fiber);
+	id=LineList.size();
+	new_fiber->id=id;
 	LineList.push_back(new_fiber);
 
 

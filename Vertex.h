@@ -29,6 +29,8 @@ public:
 
 	bool IsFixed; //This will fix the vertex in space so it doesn't move (e.g. in the borders of the system
 
+	int id;
+
 	std::list<Triangle*> TriangleList;
 	std::list<Line*> LineList;
 

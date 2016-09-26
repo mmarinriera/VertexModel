@@ -23,6 +23,8 @@ Line::Line() {
 	IsEdge=false;
 	IsFiber=false;
 
+	id=0;
+
 
 }
 
@@ -41,6 +43,8 @@ Line::Line(Vertex* va, Vertex* vb) {
 	IsEdge=false;
 	IsFiber=false;
 
+	id=0;
+
 }
 
 Line::Line(Vertex* va, Vertex* vb, Triangle* ta, Triangle* tb) {
@@ -57,6 +61,8 @@ Line::Line(Vertex* va, Vertex* vb, Triangle* ta, Triangle* tb) {
 
 	IsEdge=false;
 	IsFiber=false;
+
+	id=0;
 
 }
 

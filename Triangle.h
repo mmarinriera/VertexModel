@@ -28,6 +28,12 @@ class Cell;
 
 class Triangle {
 public:
+
+	Triangle();
+	Triangle(Vertex*,Vertex*,Vertex*);
+	Triangle(Vertex*,Line*,Line*,Line*);
+	Triangle(Vertex*,Vertex*,Vertex*,Line*,Line*,Line*);
+
 	//the vertices of the triangle are ordered in clock-wise sense (A-B-C-A)
 	Vertex* VertexA;
 	Vertex* VertexB;
@@ -43,10 +49,7 @@ public:
 
 	static const float OneThird=1.0f/3.0f;
 
-	Triangle();
-	Triangle(Vertex*,Vertex*,Vertex*);
-	Triangle(Vertex*,Line*,Line*,Line*);
-	Triangle(Vertex*,Vertex*,Vertex*,Line*,Line*,Line*);
+	int id;
 
 	Vertex* GetOppositeVertex(Line*);
 	Line* GetOppositeLine(Vertex*);

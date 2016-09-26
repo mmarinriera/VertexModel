@@ -11,6 +11,8 @@ Vertex::Vertex() {
 	x=0;
 	y=0;
 
+	id=0;
+
 	IsJunction=false;
 	IsCentre=false;
 
@@ -21,6 +23,8 @@ Vertex::Vertex() {
 Vertex::Vertex(float a,float b) {
 	x=a;
 	y=b;
+
+	id=0;
 
 	IsJunction=false;
 	IsCentre=false;
