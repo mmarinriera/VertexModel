@@ -12,6 +12,8 @@
 //#include "Junction.h"
 //#include "Centre.h"
 #include "Triangle.h"
+#include "Vector2D.h"
+
 
 class Line {
 public:
@@ -25,6 +27,8 @@ public:
 	Triangle* TriangleA;
 	Triangle* TriangleB;
 
+
+	Vector2D<float> VectorAB;
 	float Length;
 
 	//mechanical parameters
@@ -41,6 +45,9 @@ public:
 	Triangle* GetOtherSide(Triangle*);
 	void ConnectVertex(Vertex*,char);
 	char GetVertexIndex(Vertex*);
+
+	void UpdateVector();
+	Vector2D<float> GetVectorByOrigin(Vertex*);
 
 };
 

@@ -18,6 +18,8 @@ Cell::Cell() {
 	PerimeterTensionCoef=0.0f;
 	Perimeter=0.0f;
 
+	SurfAreaConservationProduct=0.0;
+	PerimeterTensionProduct=0.0;
 }
 
 Cell::Cell(Centre* c, int b) {
@@ -31,6 +33,15 @@ Cell::Cell(Centre* c, int b) {
 	PerimeterTensionCoef=0.0f;
 	Perimeter=0.0f;
 
+	SurfAreaConservationProduct=0.0;
+	PerimeterTensionProduct=0.0;
+
+}
+
+void Cell::UpdateCalculations()
+{
+	SurfAreaConservationProduct=SurfAreaConservationCoef*(SurfArea-EqSurfArea);
+	PerimeterTensionProduct=PerimeterTensionCoef*Perimeter;
 }
 
 Cell::~Cell() {

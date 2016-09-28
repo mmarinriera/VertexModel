@@ -50,6 +50,12 @@ public:
 	float PerimeterTensionCoef;
 	float Perimeter;
 
+	//temporal storage for calculated variables (this avoids repeating the same calculation in the MechSolver
+	float SurfAreaConservationProduct;
+	float PerimeterTensionProduct;
+
+	void UpdateCalculations();
+
 
 //	bool IsBorder; //tells if the cell is located at the border of the system
 //	bool IsFixed; //tells if the cell is fixed in space

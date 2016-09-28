@@ -25,6 +25,8 @@ public:
 	Edge(Vertex*, Vertex*);
 	Edge(Vertex*, Vertex*, Triangle*, Triangle*);
 	virtual ~Edge();
+
+	std::list<Cell*> CellList;
 };
 
 #endif /* EDGE_H_ */

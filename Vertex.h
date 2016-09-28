@@ -9,6 +9,8 @@
 #define VERTEX_H_
 
 #include<list>
+#include<vector>
+
 
 class Line;
 class Triangle;
@@ -22,6 +24,9 @@ public:
 
 	float x;
 	float y;
+
+	float dx;  //motion differential (dx,dy)
+	float dy;
 
 	//logical variables (to determine derived class type)
 	bool IsJunction;

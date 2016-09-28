@@ -98,6 +98,7 @@ void System::NeighborhoodTriangulation()
 	Triangle* tri_adjacent;
 	Triangle* tritemp;
 	std::list<Triangle*>::const_iterator tit;
+    Centre* centre;
 	bool found;
 	bool trifound;
 
@@ -156,6 +157,37 @@ void System::NeighborhoodTriangulation()
     {linetemp->TriangleB=tri;}
 
     TriangleList.push_back(tri);
+    tri->id=TriangleList.size();
+
+    //We have to determine to which cell the triangle belongs,
+    //that info is stored in the centre vertex, so we have to find it
+    if(!(tri->VertexA->IsCentre))
+    {
+    	if(!(tri->VertexB->IsCentre))
+    	{
+    		if(!(tri->VertexC->IsCentre))
+    		{
+    		}
+    		else
+    		{
+	    		centre= static_cast<Centre*>(tri->VertexB);
+		    	tri->cell=centre->cell;
+    		}
+    	}
+    	else
+    	{
+    		centre= static_cast<Centre*>(tri->VertexC);
+	    	tri->cell=centre->cell;
+    	}
+    }
+    else
+    {
+    	centre= static_cast<Centre*>(tri->VertexA);
+    	tri->cell=centre->cell;
+    }
+
+
+
 
 //	std::cout <<"first triangle made and listed"<<"\n";
     ///////////////////////////////////////////
@@ -267,8 +299,8 @@ void System::NeighborhoodTriangulation()
 						    else
 						    {linetemp->TriangleB=tri;}
 
-						    tri->id=TriangleList.size()+1;
 						    TriangleList.push_back(tri);
+						    tri->id=TriangleList.size();
 
 						    list2->push_back(tri->LineBC);
 						    list2->push_back(tri->LineCA);
@@ -278,17 +310,12 @@ void System::NeighborhoodTriangulation()
 						    //We have to determine to which cell the triangle belongs,
 						    //that info is stored in the centre vertex, so we have to find it
 
-						    Centre* centre;
 						    if(!(tri->VertexA->IsCentre))
 						    {
 						    	if(!(tri->VertexB->IsCentre))
 						    	{
 						    		if(!(tri->VertexC->IsCentre))
 						    		{
-						    			std::cout <<"System::NeighborhoodTriangulation()---Triangle doesn't connect to a Centre!"<<"\n";
-//						    			std::cout <<"System::NeighborhoodTriangulation()---tri "<< tri->id<<" va "<<tri->VertexA->id<< " vb "<< tri->VertexB->id<<" vc "<< tri->VertexC->id<<"\n";
-//						    			std::cout <<"System::NeighborhoodTriangulation()---tri "<< tri->id<<" va "<< tri->VertexA->x<<" "<< tri->VertexA->y<< " vb "<< tri->VertexB->x<<" "<< tri->VertexB->y<<" "<<" vc "<< tri->VertexC->x<<" "<< tri->VertexC->y<<"\n";
-//						    			std::cout <<"System::NeighborhoodTriangulation()---tri "<< tri->id<<" va "<<tri->VertexA->IsCentre<< " vb "<< tri->VertexB->IsCentre<<" vc "<< tri->VertexC->IsCentre<<"\n";
 						    		}
 						    		else
 						    		{
@@ -377,12 +404,205 @@ void System::MechSolver()
 {
 	//This function solves the system of equations of motion for the Vertices in this Vertex Model
 
+	std::list<Cell*>::const_iterator cit;
 	std::list<Triangle*>::const_iterator tit;
+	std::list<Line*>::const_iterator lit;
+	std::list<Vertex*>::const_iterator vit;
+	Cell* cell;
+	Triangle* tri;
+	Line* line;
+	Edge* edge;
+	Fiber* fiber;
+	Vertex* vertex;
+	Junction* junction;
+	//Centre* centre;
+	Vector2D<float> vecA,vecB,vecC;
+	//some utilitary variables
+	float a;
 
+	//we need to calculate 4 different things:
+	//1- displacements due to surface area conservation
+	//2- displacements due to perimeter tension
+	//3- displacements due to edge tension
+	//4- displacements due to fiber tension
+	//
+	//For the surface area conservation, the motion vector has a direction equal to the
+	//bisectrix of the two edges from the same cell connecting with the junction.
+	//We are going to find these edges through the fiber that is locate between them
+
+
+	std::cout << "System::MechSolver-- loop 1\n";
+
+	//This loop initialises all summatory variables within cells (surface area and perimeter)
+	for(cit=CellList.begin(); cit!=CellList.end(); ++cit)
+	{
+		cell=*cit;
+		cell->SurfArea=0.0;
+		cell->Perimeter=0.0;
+	}
+
+	std::cout << "System::MechSolver-- loop 2\n";
+
+	//Now we calculate the cell's surface area as a sum of their triangles' surface area
 	for(tit=TriangleList.begin(); tit!=TriangleList.end(); ++tit)
 	{
+		tri=*tit;
+		std::cout << "System::MechSolver-- loop 2.1\n";
+		tri->UpdateSurfaceArea();
+		std::cout << "System::MechSolver-- loop 2.2\n";
+		if(tri->cell==0) {std::cout << "System::MechSolver-- NULL POINTER\n";}
+		tri->cell->SurfArea += tri->SurfaceArea;
+		std::cout << "System::MechSolver-- loop 2.3\n";
+	}
+
+	std::cout << "System::MechSolver-- loop 3\n";
+
+	//Now we calculate the cell's perimeter as a sum of the length of their edges
+	//Also, we update the lengths of all lines
+	for(lit=LineList.begin(); lit!=LineList.end(); ++lit)
+	{
+		line=*lit;
+
+		line->UpdateVector(); //we update the line vector for the calculations in following loops
+
+		if(line->IsEdge)
+		{
+			edge= static_cast<Edge*>(line);
+			edge->UpdateLength();
+			for(cit=edge->CellList.begin(); cit!=edge->CellList.end(); ++cit)
+			{
+				cell=*cit;
+				cell->Perimeter += edge->Length;
+			}
+		}
+		if(line->IsFiber)
+		{
+			fiber= static_cast<Fiber*>(line);
+			fiber->UpdateLength();
+		}
+	}
+
+	std::cout << "System::MechSolver-- loop 4\n";
+
+
+	//Make calculations within Cell class and store the results to be used later when calculating vertex
+	//displacement, so we do not repeat the calculations (namely surface area conservation and Perimeter tension)
+	for(cit=CellList.begin(); cit!=CellList.end(); ++cit)
+	{
+		cell=*cit;
+		cell->UpdateCalculations();
+	}
+
+	std::cout << "System::MechSolver-- loop 5\n";
+
+
+	//Now we calculate Vertex displacement based on surface area and perimeter conservation and line tension
+	//We solve partial differential equations of motion by Euler Method
+
+	Line* edgeA;
+	Line* edgeB;
+
+	//this loop initialises the motion differential of all the vertices and applies displacement by surface
+	//area conservation
+	for(vit=VertexList.begin(); vit!=VertexList.end(); ++vit)
+	{
+		vertex=*vit;
+		vertex->dx=0.0f ; vertex->dy=0.0f;  //we initialise the motion differential
+
+		if(vertex->IsJunction)
+		{
+			junction= static_cast<Junction*>(vertex);
+
+			for(lit=junction->LineList.begin(); lit!=junction->LineList.end(); ++lit)
+			{
+				line=*lit;
+				if(line->IsFiber)
+				{
+					fiber=static_cast<Fiber*>(line);
+					cell=fiber->cell;
+
+					//now we find the two adjacent cell edges in order to calculate the bisectrix
+					//we go to the two triangles that share "fiber" and look for the line adjacent
+					//to it that also shares the "junction" vertex
+
+					edgeA=fiber->TriangleA->GetAdjacentLine(junction,fiber);
+					edgeB=fiber->TriangleB->GetAdjacentLine(junction,fiber);
+
+					//the vector made from the bisectrix
+
+					vecA=edgeA->GetVectorByOrigin(junction); vecA.MakeUnit();
+					vecB=edgeB->GetVectorByOrigin(junction); vecB.MakeUnit();
+
+					//this is the bisectrix
+					vecC=vecA+vecB ; vecC.MakeUnit();
+
+					//now we add the force component to the resulting vector of motion of the junction
+					junction->dx+=cell->SurfAreaConservationProduct*vecC.x;
+					junction->dy+=cell->SurfAreaConservationProduct*vecC.y;
+
+				}
+			}
+		}
+	}
+
+	std::cout << "System::MechSolver-- loop 6\n";
+
+
+	//this loop goes through all the lines and applies line tension and perimeter tension (only on edges)
+	//on the vertices connected to them
+	for(lit=junction->LineList.begin(); lit!=junction->LineList.end(); ++lit)
+	{
+		line=*lit;
+
+		//all displacements will be in the direction paralel to the line, so we can use the line vector
+		vecA=line->VectorAB; vecA.MakeUnit();
+
+		if(line->IsEdge)
+		{
+			//We have to apply line tension and perimeter tension for all the cells sharing this edge
+			edge=static_cast<Edge*>(line);
+			//initialise variable to store the modulus of the motion vector
+			a=0.0f;
+			//let's gather first the terms of perimeter tension for all the cells involved
+			for(cit=edge->CellList.begin(); cit!=edge->CellList.end(); ++cit)
+			{
+				cell=*cit;
+				a+=cell->PerimeterTensionProduct;
+			}
+			//now we add the term of line tension
+			a+=edge->LineTensionCoef;
+
+			//now we apply the motion vector on both vertices connected to the edge
+			edge->VertexA->dx+=a*vecA.x; edge->VertexA->dy+=a*vecA.y;
+			edge->VertexB->dx-=a*vecA.x; edge->VertexB->dy-=a*vecA.y; //note, this is the opposite vector
+
+
+		}
+		else if(line->IsFiber)
+		{
+			//In fibers we only need to apply line tension
+			a=line->LineTensionCoef;
+			line->VertexA->dx+=a*vecA.x; line->VertexA->dy+=a*vecA.y;
+			line->VertexB->dx-=a*vecA.x; line->VertexB->dy-=a*vecA.y; //note, this is the opposite vector
+
+		}
 
 	}
+
+	std::cout << "System::MechSolver-- loop 7\n";
+
+
+	//now we update vertex positions with the motion differentials using the euler method
+	for(vit=VertexList.begin(); vit!=VertexList.end(); ++vit)
+	{
+		vertex=*vit;
+		vertex->x+=EulerDelta*vertex->dx;
+		vertex->y+=EulerDelta*vertex->dy;
+	}
+
+	std::cout << "System::MechSolver--DONE\n";
+
+
 }
 ///////////////////////////////////////////////////////////////////
 
@@ -435,18 +655,20 @@ void System::InitialConditionsSingleCell()
 	cell_template.EqSurfArea=5.0f;
 	cell_template.SurfAreaConservationCoef=1.0f;
 	cell_template.PerimeterTensionCoef=1.0f;
-	cell_template.id = CellList.size()+1;
+
 
 
 
 	Cell* new_cell=new Cell(cell_template);
 
-	CellList.push_back(new_cell);
+	//if(new_cell==0){std::cout<<"InitialConditionsSingleCell--Cell pointer Null\n";}
 
+	CellList.push_back(new_cell);
+	new_cell->id = CellList.size();
 
 	int id;
 
-	std::cout<<"InitialConditionsSingleCell--BLUILD THE MESH\n";
+	std::cout<<"InitialConditionsSingleCell--BUILD THE MESH\n";
 
 	//Creating the cell junctions
 	Junction* ja=new Junction(-0.5f,-0.5f);
@@ -484,11 +706,14 @@ void System::InitialConditionsSingleCell()
 	ca->id=id;
 	new_cell->CellCentre=ca;
 
+	//if(ca->cell==0){std::cout<<"InitialConditionsSingleCell--cell pointer within centre is null\n";}
+
 	//Now we connect with lines
 	//Edges
 	float edge_line_tension=1.0f;
 	Edge* new_edge= new Edge(ja,jb);
 	new_edge->LineTensionCoef=edge_line_tension;
+	new_edge->CellList.push_back(new_cell);
 	new_cell->EdgeList.push_back(new_edge);
 	id=LineList.size();
 	new_edge->id=id;
@@ -503,6 +728,7 @@ void System::InitialConditionsSingleCell()
 
 	new_edge= new Edge(jc,jd);
 	new_edge->LineTensionCoef=edge_line_tension;
+	new_edge->CellList.push_back(new_cell);
 	new_cell->EdgeList.push_back(new_edge);
 	id=LineList.size();
 	new_edge->id=id;
@@ -510,6 +736,7 @@ void System::InitialConditionsSingleCell()
 
 	new_edge= new Edge(jd,ja);
 	new_edge->LineTensionCoef=edge_line_tension;
+	new_edge->CellList.push_back(new_cell);
 	new_cell->EdgeList.push_back(new_edge);
 	id=LineList.size();
 	new_edge->id=id;
@@ -519,6 +746,7 @@ void System::InitialConditionsSingleCell()
 	float fiber_line_tension=1.0f;
 	Fiber* new_fiber= new Fiber(ja,ca);
 	new_fiber->LineTensionCoef=fiber_line_tension;
+	new_fiber->cell=new_cell;
 	new_cell->FiberList.push_back(new_fiber);
 	id=LineList.size();
 	new_fiber->id=id;
@@ -526,6 +754,7 @@ void System::InitialConditionsSingleCell()
 
 	new_fiber= new Fiber(jb,ca);
 	new_fiber->LineTensionCoef=fiber_line_tension;
+	new_fiber->cell=new_cell;
 	new_cell->FiberList.push_back(new_fiber);
 	id=LineList.size();
 	new_fiber->id=id;
@@ -533,6 +762,7 @@ void System::InitialConditionsSingleCell()
 
 	new_fiber= new Fiber(jc,ca);
 	new_fiber->LineTensionCoef=fiber_line_tension;
+	new_fiber->cell=new_cell;
 	new_cell->FiberList.push_back(new_fiber);
 	id=LineList.size();
 	new_fiber->id=id;
@@ -540,6 +770,7 @@ void System::InitialConditionsSingleCell()
 
 	new_fiber= new Fiber(jd,ca);
 	new_fiber->LineTensionCoef=fiber_line_tension;
+	new_fiber->cell=new_cell;
 	new_cell->FiberList.push_back(new_fiber);
 	id=LineList.size();
 	new_fiber->id=id;

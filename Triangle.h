@@ -53,6 +53,7 @@ public:
 
 	Vertex* GetOppositeVertex(Line*);
 	Line* GetOppositeLine(Vertex*);
+	Line* GetAdjacentLine(Vertex*, Line*);
 	Vertex* GetLead(Vertex*,Vertex*);
 	void UpdateCentroid();
 	void UpdateSurfaceArea();

@@ -11,6 +11,8 @@
 #include <list>
 #include <iostream>
 
+#include "Vector2D.h"
+
 #include "Cell.h"
 #include "Vertex.h"
 //#include "Junction.h"

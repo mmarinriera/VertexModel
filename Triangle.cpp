@@ -181,6 +181,32 @@ Line* Triangle::GetOppositeLine(Vertex* vert)
 	}
 }
 
+Line* Triangle::GetAdjacentLine(Vertex* vert, Line* line)
+{
+
+	Line* opposite = GetOppositeLine(vert);
+
+	if((LineAB != opposite) && (LineAB != line))
+	{
+		return LineAB;
+	}
+	else if ((LineBC != opposite) && (LineBC != line))
+	{
+		return LineBC;
+	}
+	else if((LineCA != opposite) && (LineCA != line))
+	{
+		return LineCA;
+	}
+	else
+	{
+		std::cout << "Triangle::GetAdjacentLine: No match found, prob. wrong arguments?" << "\n";
+		return 0;
+	}
+
+}
+
+
 Vertex* Triangle::GetLead(Vertex* va,Vertex* vb)
 {
 	Vertex* temp;

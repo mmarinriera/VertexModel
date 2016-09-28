@@ -26,6 +26,8 @@ public:
 	Fiber(Vertex*, Vertex*);
 	Fiber(Vertex*, Vertex*, Triangle*, Triangle*);
 	virtual ~Fiber();
+
+	Cell* cell;
 };
 
 #endif /* FIBER_H_ */

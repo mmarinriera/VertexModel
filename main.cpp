@@ -602,7 +602,7 @@ int main (int argc, char** argv)
 
 
     int length_time_interval=1;
-    int n_time_intervals=1;
+    int n_time_intervals=100;
 
 
 	//Setting the initial conditions and initializing
@@ -616,12 +616,12 @@ int main (int argc, char** argv)
 
 
 	//my_system time progress is calculated every length_time_interval and displayed, n_time_interval times
-	//for (int i=1 ; i<=n_time_intervals ; i++)
-	//{
+	for (int i=1 ; i<=n_time_intervals ; i++)
+	{
 		MySystem->TimeIterator(length_time_interval);
 		//std::cout << "CUT1" << "\n";
 		showxlib(MySystem);
-	//}
+	}
 	std::cout << "PROGRAM--DONE" << "\n";
 
 	return 0;

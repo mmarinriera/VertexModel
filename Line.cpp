@@ -17,6 +17,8 @@ Line::Line() {
 	TriangleB=0;
 
 	Length=0.0f;
+	VectorAB.x=0.0f;
+	VectorAB.y=0.0f;
 
 	LineTensionCoef=0.0f;
 
@@ -37,6 +39,8 @@ Line::Line(Vertex* va, Vertex* vb) {
 	TriangleB=0;
 
 	UpdateLength();
+	VectorAB.x=vb->x - va->x;
+	VectorAB.y=vb->y - va->y;
 
 	LineTensionCoef=0.0f;
 
@@ -56,6 +60,8 @@ Line::Line(Vertex* va, Vertex* vb, Triangle* ta, Triangle* tb) {
 	TriangleB=tb;
 
 	UpdateLength();
+	VectorAB.x=vb->x - va->x;
+	VectorAB.y=vb->y - va->y;
 
 	LineTensionCoef=0.0f;
 
@@ -160,5 +166,32 @@ char Line::GetVertexIndex(Vertex* vert)
 		std::cout << "Line::GetVertexIndex --> VERTEX NOT CONNECTED TO LINE" << "\n";
 		return '0';
 	}
+}
+
+void Line::UpdateVector()
+{
+	VectorAB.x=VertexB->x - VertexA->x;
+	VectorAB.y=VertexB->y - VertexA->y;
+	VectorAB.length=sqrt(pow(VectorAB.x,2)+pow(VectorAB.y,2));
+}
+
+Vector2D<float> Line::GetVectorByOrigin(Vertex* vert)
+{
+	if(vert==VertexA)
+	{
+		return VectorAB;
+	}
+	else if(vert==VertexB)
+	{
+		Vector2D<float> temp(0.0f,0.0f);
+		return temp-VectorAB;
+	}
+	else
+	{
+		std::cout << "Line::GetVectorByOrigin --> Vertex provided not connected to line\n";
+		Vector2D<float> temp(0.0f,0.0f);
+		return temp;
+	}
+
 }
 

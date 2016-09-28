@@ -10,17 +10,23 @@
 Fiber::Fiber() : Line()
 {
 	IsFiber=true;
+
+	cell=0;
 }
 
 Fiber::Fiber(Vertex* va, Vertex* vb) : Line(va,vb)
 {
 	IsFiber=true;
+
+	cell=0;
 }
 
 
 Fiber::Fiber(Vertex* va, Vertex* vb, Triangle* ta, Triangle* tb) : Line(va,vb,ta,tb)
 {
 	IsFiber=true;
+
+	cell=0;
 }
 
 
